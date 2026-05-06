@@ -1,0 +1,270 @@
+    :root {
+      --gold:        #c6a664;
+      --gold-dim:    rgba(198,166,100,0.12);
+      --gold-border: rgba(198,166,100,0.22);
+      --bg:          #090807;
+      --surface:     #111009;
+      --border:      rgba(255,255,255,0.07);
+      --text:        #ddd5c5;
+      --muted:       #5a5040;
+      --dim:         #28221a;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { height: 100%; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    /* ── TOP NAV ── */
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 64px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand img { height: 28px; opacity: 0.85; }
+
+    .brand-label {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 4px;
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 2px;
+      color: var(--muted);
+    }
+
+    .live-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0.9;
+    }
+
+    /* ── MAIN ── */
+    main {
+      padding: 80px 64px 64px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 64px;
+    }
+
+    /* Hero */
+    .hero-label {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 3px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 40px;
+    }
+
+    .hero-label::before {
+      content: '';
+      width: 20px; height: 1px;
+      background: var(--muted);
+      flex-shrink: 0;
+    }
+
+    h1 {
+      font-family: 'Fira Code', monospace;
+      font-size: clamp(3rem, 8.5vw, 8rem);
+      font-weight: 300;
+      line-height: 1.04;
+      color: var(--text);
+      letter-spacing: -2px;
+      margin-bottom: 36px;
+    }
+
+    h1 em {
+      font-style: normal;
+      color: var(--gold);
+    }
+
+    .hero-desc {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--muted);
+      max-width: 420px;
+      line-height: 1.75;
+    }
+
+    /* ── PORTAL LINKS ── */
+    .portals {
+      border-top: 1px solid var(--border);
+    }
+
+    .portal-link {
+      display: flex;
+      align-items: center;
+      padding: 26px 0;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+      color: inherit;
+      gap: 28px;
+      position: relative;
+      transition: padding-left 0.28s ease;
+    }
+
+    .portal-link::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 2px;
+      background: var(--gold);
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform 0.28s ease;
+    }
+
+    .portal-link:hover { padding-left: 18px; }
+    .portal-link:hover::before { transform: scaleY(1); }
+
+    .p-num {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.56rem;
+      letter-spacing: 2px;
+      color: var(--dim);
+      flex-shrink: 0;
+      width: 36px;
+    }
+
+    .p-name {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.88rem;
+      font-weight: 500;
+      letter-spacing: 2px;
+      color: var(--text);
+      flex: 1;
+      transition: color 0.22s;
+    }
+
+    .portal-link:hover .p-name { color: var(--gold); }
+
+    .p-badge {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.56rem;
+      letter-spacing: 2px;
+      padding: 4px 11px;
+      border: 1px solid;
+      flex-shrink: 0;
+    }
+
+    .badge-open   { color: var(--gold);   border-color: var(--gold-border); }
+    .badge-closed { color: #8b5050; border-color: rgba(139,80,80,0.28); }
+
+    .p-arrow {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      color: var(--dim);
+      transition: color 0.22s, transform 0.22s;
+      flex-shrink: 0;
+    }
+
+    .portal-link:hover .p-arrow { color: var(--gold); transform: translateX(5px); }
+
+    /* ── META STRIP ── */
+    .meta-strip {
+      display: flex;
+      gap: 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .meta-item {
+      padding: 20px 36px 20px 0;
+      margin-right: 36px;
+      border-right: 1px solid var(--border);
+    }
+
+    .meta-item:last-child { border-right: none; margin-right: 0; }
+
+    .meta-val {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text);
+      display: block;
+      margin-bottom: 5px;
+      letter-spacing: 1px;
+    }
+
+    .meta-lbl {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.5rem;
+      letter-spacing: 2.5px;
+      color: var(--dim);
+      text-transform: uppercase;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 20px 64px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    footer p {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.54rem;
+      letter-spacing: 1.5px;
+      color: var(--dim);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-links a {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.54rem;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--gold); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .top-nav { padding: 18px 24px; }
+      main { padding: 48px 24px 48px; gap: 48px; }
+      footer { padding: 18px 24px; }
+      h1 { font-size: 2.8rem; letter-spacing: -1px; }
+      .meta-strip { flex-wrap: wrap; gap: 0; }
+      .meta-item { border-right: none; padding: 16px 0; margin-right: 0; border-bottom: 1px solid var(--border); width: 50%; }
+      .meta-item:nth-child(odd) { padding-right: 16px; }
+    }

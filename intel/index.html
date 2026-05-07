@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ISC Internal Portal</title>
+  <link rel="icon" type="image/png" href="/isc/assets/images/ISC_LOGO.png">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/isc/intel/assets/css/style.css">
+</head>
+<body oncontextmenu="return false;">
+
+  <!-- ── LOGIN OVERLAY ── -->
+  <div id="login-overlay">
+    <div class="login-inner">
+      <div class="login-logo">
+        <img src="/isc/assets/images/ISC_LOGO.png" alt="ISC">
+        <span>INTERNAL SECURITY CONTROL</span>
+      </div>
+      <div class="login-title">Authorization Required</div>
+      <div class="login-sub">ISC INTERNAL PORTAL // RESTRICTED ACCESS</div>
+      <input
+        type="password"
+        class="inp"
+        id="passcode"
+        placeholder="ENTER CLEARANCE CODE"
+        onkeypress="if(event.key==='Enter') auth()"
+        autocomplete="off"
+      >
+      <button class="auth-btn" id="auth-btn" onclick="auth()">AUTHENTICATE →</button>
+      <div id="error-msg"></div>
+      <p class="login-note">
+        UNAUTHORIZED ACCESS VIOLATES ISC DIRECTIVE 01<br>
+        ALL SESSIONS ARE LOGGED AND MONITORED
+      </p>
+    </div>
+  </div>
+
+  <!-- ── MAIN CONTENT ── -->
+  <div id="main-content">
+
+    <nav class="portal-nav">
+      <div class="pnav-brand">
+        <img src="/isc/assets/images/ISC_LOGO.png" alt="ISC">
+        <span>ISC // INTERNAL PORTAL</span>
+      </div>
+      <div class="pnav-links">
+        <a href="#status">SYSTEM</a>
+        <a href="#personnel">PERSONNEL</a>
+        <a href="#logs">LOGS</a>
+        <a href="#threats">THREATS</a>
+      </div>
+      <a href="/isc/" class="exit-link">EXIT →</a>
+    </nav>
+
+    <div class="dash-wrap">
+
+      <div class="dash-hero reveal">
+        <div>
+          <div class="dash-label">CLEARANCE_GRANTED // PORTAL_ACTIVE</div>
+          <h2 class="dash-title">Sovereignty Through <em>Oversight.</em></h2>
+          <p class="dash-sub">Official intelligence branch — The Legend of Legiona.</p>
+        </div>
+        <div class="clock-wrap">
+          <div class="clock-time" id="clock">--:--:--</div>
+          <div class="clock-lbl">UTC // LIVE</div>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+
+        <div class="panel reveal" id="status">
+          <div class="panel-hdr">
+            <span>SYSTEM_CORE</span>
+            <span class="panel-tag">SXR_ERA_2026</span>
+          </div>
+          <div class="st-row"><span>SKYXION_ALTAËR</span><span class="st-tag off">OFFLINE</span></div>
+          <div class="st-row"><span>ISC_ENCRYPTION</span><span class="st-tag on">ACTIVE</span></div>
+          <div class="st-row"><span>ARCHIVE_SYNC</span><span class="st-tag on">SYNCED</span></div>
+          <div class="st-row"><span>BORDER_MONITORING</span><span class="st-tag on">RUNNING</span></div>
+        </div>
+
+        <div class="panel reveal" id="personnel">
+          <div class="panel-hdr">
+            <span>ACTIVE_OPERATIVES</span>
+            <span class="panel-tag">2 ACTIVE</span>
+          </div>
+          <div class="person-row">
+            <div>
+              <div class="person-name">Director of Intel</div>
+              <div class="person-role">OVERSIGHT // COMMAND</div>
+            </div>
+            <div class="clearance">L-0</div>
+          </div>
+          <div class="person-row">
+            <div>
+              <div class="person-name">Lead Archivist</div>
+              <div class="person-role">LORE PRESERVATION</div>
+            </div>
+            <div class="clearance">L-1</div>
+          </div>
+        </div>
+
+        <div class="panel reveal" id="logs">
+          <div class="panel-hdr">
+            <span>CLASSIFIED_LOGS</span>
+            <span class="panel-tag">2 ENTRIES</span>
+          </div>
+          <div class="log-entry">
+            <div class="log-id">LOG-001-GEN</div>
+            <div class="log-title">The Genesis Protocol</div>
+            <p class="log-body">Initial unit formation data. Core bonds established between founding members of the pre-ISC unit.</p>
+            <span class="log-tag">ORIGIN // HISTORICAL</span>
+          </div>
+          <div class="log-entry">
+            <div class="log-id">LOG-030-EQA</div>
+            <div class="log-title">Directive: Eternal Equality</div>
+            <p class="log-body">Monitoring centralized power spikes for the Egalitarian Model. Post-UltraX2020 governance oversight.</p>
+            <span class="log-tag">DIRECTIVE // ONGOING</span>
+          </div>
+        </div>
+
+        <div class="panel reveal" id="threats">
+          <div class="panel-hdr">
+            <span>THREAT_MONITOR</span>
+            <span class="panel-tag">SXR ERA</span>
+          </div>
+          <div class="threat-row">
+            <span class="t-level low">LOW</span>
+            <span class="t-name">Border Instability</span>
+            <span class="t-sector">OUTER</span>
+          </div>
+          <div class="threat-row">
+            <span class="t-level med">MED</span>
+            <span class="t-name">Unverified Faction Activity</span>
+            <span class="t-sector">CENTRAL</span>
+          </div>
+          <div class="threat-row">
+            <span class="t-level high">HIGH</span>
+            <span class="t-name">SKYXION_ALTAËR Offline</span>
+            <span class="t-sector">SYSTEM</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <footer class="portal-footer">
+      <p>© 2026 INTERNAL SECURITY CONTROL // THE LEGEND OF LEGIONA</p>
+      <div class="session-pill">SESSION: ACTIVE</div>
+    </footer>
+
+  </div>
+
+  <script src="/isc/intel/assets/js/script.js"></script>
+  
+</body>
+</html>

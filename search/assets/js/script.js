@@ -107,6 +107,8 @@
 
     document.getElementById('total-count').textContent = ASSETS.length;
     document.getElementById('count-num').textContent   = ASSETS.length;
+    const uniqueCats = new Set(ASSETS.map(a => a.category)).size;
+    document.getElementById('cat-count').textContent = uniqueCats;
 
     function setQuery(q) {
       document.getElementById('archive-search').value = q;

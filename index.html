@@ -8,31 +8,405 @@
   <meta property="og:title" content="Internal Security Control — ISC">
   <meta property="og:description" content="The first defense line for The Legend of Legiona.">
   <meta name="theme-color" content="#c6a664">
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/isc/assets/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Teko:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #c6a664;
+      --gold-dim: #8a6f3f;
+      --gold-faint: rgba(198,166,100,0.08);
+      --bg: #080807;
+      --bg2: #0e0d0b;
+      --bg3: #141310;
+      --line: rgba(198,166,100,0.18);
+      --line-faint: rgba(198,166,100,0.07);
+      --text: #e8e0d0;
+      --text-muted: #7a7060;
+      --text-dim: #4a4438;
+      --danger: #8b3030;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Fira Code', monospace;
+      font-weight: 300;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Scanlines overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.08) 2px,
+        rgba(0,0,0,0.08) 4px
+      );
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    /* Corner marks */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 16px; left: 16px; right: 16px; bottom: 16px;
+      border: 1px solid var(--line-faint);
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* ── NAV ── */
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(24px, 5vw, 60px);
+      height: 56px;
+      background: rgba(8,8,7,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .brand img { height: 28px; width: 28px; object-fit: contain; filter: brightness(0.9); }
+    .brand-label {
+      font-family: 'Teko', sans-serif;
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(198,166,100,0.4); }
+      50% { opacity: 0.5; box-shadow: 0 0 0 4px rgba(198,166,100,0); }
+    }
+
+    #clock { color: var(--gold); font-weight: 400; letter-spacing: 0.1em; }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: clamp(48px, 8vw, 96px) clamp(24px, 5vw, 60px) clamp(48px, 6vw, 72px);
+      gap: 64px;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* ── HERO ── */
+    .hero { position: relative; }
+
+    .hero-label {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      color: var(--gold-dim);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero-label::before {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 1px;
+      background: var(--gold-dim);
+    }
+
+    h1 {
+      font-family: 'Teko', sans-serif;
+      font-size: clamp(72px, 12vw, 160px);
+      font-weight: 600;
+      line-height: 0.88;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 32px;
+    }
+    h1 em {
+      font-style: normal;
+      color: var(--gold);
+    }
+
+    .hero-desc {
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--text-muted);
+      max-width: 480px;
+      letter-spacing: 0.03em;
+    }
+
+    /* Classification band */
+    .classif-band {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 24px;
+      padding: 6px 14px;
+      border: 1px solid var(--line);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      color: var(--gold-dim);
+      text-transform: uppercase;
+      background: var(--gold-faint);
+    }
+    .classif-band span { color: var(--gold); font-weight: 500; }
+
+    /* ── PORTALS ── */
+    .portals {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .portal-link {
+      display: grid;
+      grid-template-columns: 36px 1fr auto auto;
+      align-items: center;
+      gap: 20px;
+      padding: 22px 28px;
+      background: var(--bg2);
+      border: 1px solid var(--line-faint);
+      border-left: 3px solid transparent;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .portal-link::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, var(--gold-faint) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .portal-link:hover {
+      border-left-color: var(--gold);
+      border-color: var(--line);
+      background: var(--bg3);
+    }
+    .portal-link:hover::before { opacity: 1; }
+
+    .p-num {
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+    }
+    .p-name {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+    .portal-link:hover .p-name { color: var(--gold); }
+
+    .p-badge {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border: 1px solid;
+    }
+    .badge-open {
+      color: #5a9a6a;
+      border-color: rgba(90,154,106,0.3);
+      background: rgba(90,154,106,0.06);
+    }
+    .badge-closed {
+      color: var(--gold-dim);
+      border-color: var(--line);
+      background: var(--gold-faint);
+    }
+
+    .p-arrow {
+      font-size: 16px;
+      color: var(--text-dim);
+      transition: color 0.2s, transform 0.2s;
+    }
+    .portal-link:hover .p-arrow {
+      color: var(--gold);
+      transform: translateX(4px);
+    }
+
+    /* ── META STRIP ── */
+    .meta-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--line-faint);
+      background: var(--bg2);
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 20px 24px;
+      border-right: 1px solid var(--line-faint);
+    }
+    .meta-item:last-child { border-right: none; }
+
+    .meta-val {
+      font-family: 'Teko', sans-serif;
+      font-size: 22px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+    }
+    .meta-lbl {
+      font-size: 9px;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 20px clamp(24px, 5vw, 60px);
+      border-top: 1px solid var(--line-faint);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    footer p {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+    .footer-links a {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--text-dim);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.15s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .meta-strip {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .meta-item:nth-child(2) { border-right: none; }
+      .meta-item:nth-child(3) { border-top: 1px solid var(--line-faint); }
+      .meta-item:nth-child(4) { border-top: 1px solid var(--line-faint); }
+
+      .portal-link {
+        grid-template-columns: 28px 1fr auto;
+        gap: 12px;
+        padding: 18px 20px;
+      }
+      .p-arrow { display: none; }
+      .p-badge { display: none; }
+
+      footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .footer-links { flex-wrap: wrap; gap: 16px; }
+    }
+
+    @media (max-width: 420px) {
+      .nav-right span:last-child { display: none; }
+    }
+
+    /* ── ENTRANCE ANIM ── */
+    .hero-label, h1, .hero-desc, .classif-band { opacity: 0; animation: fadeUp 0.6s ease forwards; }
+    .hero-label { animation-delay: 0.1s; }
+    h1           { animation-delay: 0.2s; }
+    .hero-desc   { animation-delay: 0.35s; }
+    .classif-band{ animation-delay: 0.45s; }
+    .portals     { opacity: 0; animation: fadeUp 0.5s ease 0.55s forwards; }
+    .meta-strip  { opacity: 0; animation: fadeUp 0.5s ease 0.65s forwards; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
+
 <script type="module" src="/gov/assets/js/stats.js"></script>
+
 <body>
 
   <nav class="top-nav">
     <a href=" " class="brand">
-      <img src="/isc/assets/images/ISC_LOGO.png" alt="ISC">
+      <img src="/isc/assets/images/ISC_LOGO.png" alt="ISC Logo">
       <span class="brand-label">ISC</span>
     </a>
     <div class="nav-right">
       <div class="live-dot"></div>
-      <span id="clock">-- : -- : --</span>
-      <span style="opacity:.5;">MYT</span>
+      <span id="clock">--:--:--</span>
+      <span>MYT</span>
     </div>
   </nav>
 
   <main>
-    <div>
-      <div class="hero-label">THE LEGEND OF LEGIONA // INTELLIGENCE DIVISION</div>
+    <div class="hero">
+      <div class="hero-label">The Legend of Legiona &nbsp;//&nbsp; Intelligence Division</div>
       <h1>Internal<br>Security<br><em>Control.</em></h1>
       <p class="hero-desc">The first and only intelligence agency of The Legend of Legiona. Preserving sovereignty, history, and peace across Skyxion since Season 1.</p>
+      <div class="classif-band">Classification: &nbsp;<span>ISC-OPEN</span>&nbsp; // &nbsp;Public Access Layer</div>
 
-      <div class="portals" style="margin-top:56px;">
+      <div class="portals" style="margin-top:48px;">
         <a href="/isc/national/" class="portal-link">
           <span class="p-num">01</span>
           <span class="p-name">NATIONAL_ACCESS</span>
@@ -69,15 +443,28 @@
   </main>
 
   <footer>
-    <p>© 2026 INTERNAL SECURITY CONTROL // THE LEGEND OF LEGIONA</p>
+    <p>© 2026 Internal Security Control &nbsp;//&nbsp; The Legend of Legiona</p>
     <div class="footer-links">
-      <a href="/gov/">GOV PORTAL</a>
-      <a href="/isc/national/">NATIONAL ARCHIVE</a>
-      <a href="/main/">THE LOL HUB</a>
+      <a href="/gov/">Gov Portal</a>
+      <a href="/isc/national/">National Archive</a>
+      <a href="/main/">The LoL Hub</a>
     </div>
   </footer>
 
+  <script>
+    function pad(n) { return String(n).padStart(2, '0'); }
+    function tick() {
+      const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Kuala_Lumpur' }));
+      document.getElementById('clock').textContent =
+        pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+      document.getElementById('myt-date').textContent =
+        pad(now.getDate()) + '/' + pad(now.getMonth() + 1) + '/' + now.getFullYear();
+    }
+    tick();
+    setInterval(tick, 1000);
+  </script>
+
   <script src="/isc/assets/js/script.js"></script>
-  
+
 </body>
 </html>

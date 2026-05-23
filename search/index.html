@@ -5,49 +5,53 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Public Archive Search | ISC</title>
   <link rel="icon" type="image/png" href="/isc/assets/images/ISC_LOGO.png">
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/isc/search/assets/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Teko:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/isc/assets/css/style.css">
 </head>
 <script type="module" src="/gov/assets/js/stats.js"></script>
 <body>
 
-  <header>
-    <a href="/isc/" class="logo-area">
+  <nav class="site-nav">
+    <a href="/isc/" class="brand">
       <img src="/isc/assets/images/ISC_LOGO.png" alt="ISC">
-      <div class="logo-labels">
-        <span class="top">INTERNAL SECURITY CONTROL</span>
-        <span class="btm">Public Archive</span>
+      <div>
+        <span class="brand-label">ISC</span>
+        <span class="brand-sub">Public Archive</span>
       </div>
     </a>
-    <a href="/isc/national/" class="back-btn">← BACK TO INFO</a>
-  </header>
+    <a href="/isc/national/" class="nav-btn">← BACK TO INFO</a>
+  </nav>
 
+  <!-- ── SEARCH HERO ── -->
   <div class="search-hero">
-    <div class="search-eyebrow">DECLASSIFIED // PUBLIC ACCESS</div>
-    <h1>Global Asset Discovery</h1>
-    <p class="search-sub">Search missions, legal documents, and historical intelligence files.</p>
+    <div class="page-inner">
+      <div class="eyebrow">DECLASSIFIED &nbsp;//&nbsp; PUBLIC ACCESS</div>
+      <div class="search-h1">Global Asset<br>Discovery.</div>
+      <p class="search-sub">Search missions, legal documents, and historical intelligence files.</p>
 
-    <div class="search-bar">
-      <span class="search-icon">⌕</span>
-      <input
-        type="text"
-        id="archive-search"
-        placeholder="SEARCH MISSIONS, FILES, HISTORY..."
-        oninput="filterResults()"
-        autocomplete="on"
-        spellcheck="true"
-      >
-    </div>
+      <div class="search-bar">
+        <span class="search-icon">⌕</span>
+        <input
+          type="text"
+          id="archive-search"
+          placeholder="SEARCH MISSIONS, FILES, HISTORY..."
+          oninput="filterResults()"
+          autocomplete="off"
+          spellcheck="false"
+        >
+      </div>
 
-    <div class="search-hint">
-      <span class="hint-tag" onclick="setQuery('TLIO')">TLIO</span>
-      <span class="hint-tag" onclick="setQuery('ATTACK')">ATTACK</span>
-      <span class="hint-tag" onclick="setQuery('OPERATION')">OPERATION</span>
-      <span class="hint-tag" onclick="setQuery('LEGAL')">LEGAL</span>
-      <span class="hint-tag" onclick="setQuery('HISTORY')">HISTORY</span>
+      <div class="search-hint">
+        <span class="hint-tag" onclick="setQuery('TLIO')">TLIO</span>
+        <span class="hint-tag" onclick="setQuery('Attack')">ATTACK</span>
+        <span class="hint-tag" onclick="setQuery('Operation')">OPERATION</span>
+        <span class="hint-tag" onclick="setQuery('Legal')">LEGAL</span>
+        <span class="hint-tag" onclick="setQuery('History')">HISTORY</span>
+      </div>
     </div>
   </div>
 
+  <!-- ── STATS ── -->
   <div class="stats-strip">
     <div class="stats-item">
       <span class="stats-val" id="total-count">—</span>
@@ -63,6 +67,7 @@
     </div>
   </div>
 
+  <!-- ── RESULTS ── -->
   <div class="results-wrap">
     <div class="results-header">
       <p class="results-count" id="results-count">
@@ -84,11 +89,11 @@
   </div>
 
   <footer>
-    <p>© 2026 INTERNAL SECURITY CONTROL // PUBLIC SEARCH INTERFACE</p>
-    <div class="class-badge">UNCLASSIFIED</div>
+    <p>© 2026 Internal Security Control &nbsp;//&nbsp; Public Search Interface</p>
+    <div class="footer-badge">UNCLASSIFIED</div>
   </footer>
 
-  <script src="/isc/search/assets/js/script.js"></script>
-  
+  <script src="/isc/assets/js/search.js"></script>
+
 </body>
 </html>

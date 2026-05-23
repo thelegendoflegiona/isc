@@ -7,11 +7,202 @@
   <link rel="icon" type="image/png" href="/isc/assets/images/ISC_LOGO.png">
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Teko:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/isc/assets/css/style.css">
+  <style>
+    /* ── Registry panel extras ── */
+    .reg-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .reg-input {
+      background: var(--bg);
+      border: 1px solid var(--line-faint);
+      color: var(--text);
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      padding: 5px 12px;
+      outline: none;
+      transition: border-color 0.15s;
+      text-transform: uppercase;
+    }
+    .reg-input::placeholder { color: var(--text-dim); letter-spacing: 0.12em; }
+    .reg-input:focus { border-color: var(--line); }
+    .reg-input#reg-search { width: 220px; }
+
+    .reg-select {
+      background: var(--bg);
+      border: 1px solid var(--line-faint);
+      color: var(--text-muted);
+      font-family: 'Fira Code', monospace;
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      padding: 5px 10px;
+      outline: none;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: border-color 0.15s;
+      appearance: none;
+    }
+    .reg-select:focus { border-color: var(--line); }
+
+    .reg-refresh {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      color: var(--text-dim);
+      background: none;
+      border: 1px solid var(--line-faint);
+      padding: 5px 12px;
+      cursor: pointer;
+      font-family: 'Fira Code', monospace;
+      text-transform: uppercase;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .reg-refresh:hover { color: var(--gold); border-color: var(--line); }
+
+    .reg-col-hdr {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--line-faint);
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    .reg-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line-faint);
+      transition: background 0.12s;
+    }
+    .reg-row:last-child { border-bottom: none; }
+    .reg-row:hover { background: var(--bg3); margin: 0 -24px; padding: 10px 24px; }
+
+    .reg-id       { font-size: 11px; color: var(--gold); letter-spacing: 0.06em; width: 178px; flex-shrink: 0; }
+    .reg-name     { flex: 1; font-size: 12px; color: var(--text); letter-spacing: 0.04em; min-width: 0; }
+    .reg-clr      { font-size: 9px; letter-spacing: 0.2em; color: var(--text-dim); width: 40px; flex-shrink: 0; text-align: center; }
+    .reg-territory{ flex: 1; font-size: 11px; color: var(--text-muted); min-width: 0; }
+    .reg-tier     { font-size: 9px; letter-spacing: 0.12em; color: var(--text-dim); width: 72px; flex-shrink: 0; text-align: center; text-transform: uppercase; }
+    .reg-date     { font-size: 10px; color: var(--text-dim); flex-shrink: 0; width: 96px; text-align: right; }
+
+    .reg-state {
+      padding: 24px 0;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      color: var(--text-dim);
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    /* Same widths for col header */
+    .rh-id       { width: 178px; flex-shrink: 0; }
+    .rh-name     { flex: 1; }
+    .rh-clr      { width: 40px; flex-shrink: 0; text-align: center; }
+    .rh-status   { width: 78px; flex-shrink: 0; } /* matches .st-tag width */
+    .rh-territory{ flex: 1; }
+    .rh-tier     { width: 72px; flex-shrink: 0; text-align: center; }
+    .rh-date     { width: 96px; flex-shrink: 0; text-align: right; }
+
+    /* Fullwidth panel below the grid */
+    .reg-panel {
+      border: 1px solid var(--line-faint);
+      padding: 24px;
+      background: var(--bg2);
+      margin-top: 2px;
+    }
+
+    .reg-panel-hdr {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line-faint);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      text-transform: uppercase;
+    }
+
+    .reg-panel-tag { color: var(--text-dim); font-size: 9px; letter-spacing: 0.15em; }
+  </style>
 </head>
+
 <script type="module" src="/gov/assets/js/stats.js"></script>
+
+<!-- ═══ FIREBASE MODULE ═══ -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+  import {
+    getFirestore,
+    collection, getDocs
+  } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+  import {
+    getAuth,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+
+  const app = initializeApp({
+    apiKey:            "AIzaSyAgrLJDO8F6yyVLFubiZdRGiEl5ICRSAdQ",
+    authDomain:        "the-legend-of-legiona-the-lol.firebaseapp.com",
+    projectId:         "the-legend-of-legiona-the-lol",
+    storageBucket:     "the-legend-of-legiona-the-lol.firebasestorage.app",
+    messagingSenderId: "29247096448",
+    appId:             "1:29247096448:web:370f536ad630c088b94865",
+  });
+
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+
+  /* Expose to window so intel.js (regular script) can use them */
+  window._auth   = auth;
+  window._db     = db;
+  window._fire   = { collection, getDocs };
+  window._signIn = (email, pass) => signInWithEmailAndPassword(auth, email, pass);
+  window._signOut = () => signOut(auth);
+
+  onAuthStateChanged(auth, user => {
+    const overlay = document.getElementById('login-overlay');
+    const main    = document.getElementById('main-content');
+
+    if (user) {
+      /* Fade out login overlay */
+      overlay.style.opacity = '0';
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        main.style.display = 'flex';
+        /* Set session email in footer */
+        const se = document.getElementById('session-email');
+        if (se) se.textContent = user.email;
+        /* Trigger intel.js boot */
+        if (typeof window.onAdminReady === 'function') {
+          window.onAdminReady();
+        }
+      }, 400);
+    } else {
+      overlay.style.opacity = '1';
+      overlay.style.display = 'flex';
+      main.style.display    = 'none';
+    }
+  });
+</script>
+
 <body oncontextmenu="return false;">
 
-  <!-- ── LOGIN OVERLAY ── -->
+  <!-- ═══════════════════════════════════
+       LOGIN OVERLAY
+  ═══════════════════════════════════ -->
   <div id="login-overlay">
     <div class="login-inner">
 
@@ -23,16 +214,22 @@
         </div>
       </div>
 
-      <div class="login-heading">Authorize<br>Access.</div>
-      <div class="login-sub">ISC INTERNAL PORTAL // RESTRICTED</div>
+      <div class="login-heading">Secure<br>Access.</div>
+      <div class="login-sub">ISC INTERNAL PORTAL // RESTRICTED ACCESS</div>
 
+      <input
+        type="email"
+        class="inp"
+        id="login-email"
+        placeholder="ADMIN EMAIL ADDRESS"
+        autocomplete="username"
+      >
       <input
         type="password"
         class="inp"
         id="passcode"
-        placeholder="ENTER CLEARANCE CODE"
-        onkeypress="if(event.key==='Enter') auth()"
-        autocomplete="off"
+        placeholder="ACCESS PASSWORD"
+        autocomplete="current-password"
       >
       <button class="auth-btn" id="auth-btn" onclick="auth()">AUTHENTICATE →</button>
       <div id="error-msg"></div>
@@ -45,7 +242,9 @@
     </div>
   </div>
 
-  <!-- ── MAIN CONTENT (revealed after auth) ── -->
+  <!-- ═══════════════════════════════════
+       MAIN CONTENT (revealed after auth)
+  ═══════════════════════════════════ -->
   <div id="main-content">
 
     <nav class="site-nav">
@@ -61,12 +260,14 @@
         <a href="#personnel">PERSONNEL</a>
         <a href="#logs">LOGS</a>
         <a href="#threats">THREATS</a>
+        <a href="#registry">REGISTRY</a>
       </div>
-      <a href="/isc/" class="nav-btn danger">EXIT →</a>
+      <a href="#" class="nav-btn danger" onclick="logout(); return false;">EXIT →</a>
     </nav>
 
     <div class="dash-wrap">
 
+      <!-- ── DASHBOARD HEADER ── -->
       <div class="dash-hero reveal">
         <div>
           <div class="eyebrow" style="margin-bottom:12px;">CLEARANCE_GRANTED // PORTAL_ACTIVE</div>
@@ -79,9 +280,10 @@
         </div>
       </div>
 
+      <!-- ── 2×2 OPERATIONAL GRID ── -->
       <div class="dash-grid">
 
-        <!-- STATUS -->
+        <!-- SYSTEM -->
         <div class="panel reveal" id="status">
           <div class="panel-hdr">
             <span>SYSTEM_CORE</span>
@@ -158,15 +360,70 @@
           </div>
         </div>
 
+      </div><!-- /.dash-grid -->
+
+      <!-- ═══════════════════════════════════
+           CITIZEN REGISTRY — full width
+      ═══════════════════════════════════ -->
+      <div class="reg-panel reveal" id="registry">
+
+        <div class="reg-panel-hdr">
+          <span>CITIZEN_REGISTRY &nbsp;//&nbsp; READ ACCESS</span>
+          <div class="reg-controls">
+            <input
+              type="text"
+              class="reg-input"
+              id="reg-search"
+              placeholder="SEARCH ID OR CALLSIGN..."
+              oninput="filterRegistry()"
+            >
+            <select class="reg-select" id="reg-status" onchange="filterRegistry()">
+              <option value="">ALL STATUS</option>
+              <option value="active">ACTIVE</option>
+              <option value="suspended">SUSPENDED</option>
+              <option value="revoked">REVOKED</option>
+            </select>
+            <select class="reg-select" id="reg-tier" onchange="filterRegistry()">
+              <option value="">ALL TIERS</option>
+              <option value="citizen">CITIZEN</option>
+              <option value="senior">SENIOR</option>
+              <option value="elder">ELDER</option>
+              <option value="founding">FOUNDING</option>
+            </select>
+            <button class="reg-refresh" onclick="loadRegistry()">↻ REFRESH</button>
+            <span class="reg-panel-tag" id="reg-count">— RECORDS</span>
+          </div>
+        </div>
+
+        <!-- Column headers -->
+        <div class="reg-col-hdr">
+          <span class="rh-id">THE LOL ID</span>
+          <span class="rh-name">CALLSIGN</span>
+          <span class="rh-clr">CLR</span>
+          <span class="rh-status">STATUS</span>
+          <span class="rh-territory">TERRITORY</span>
+          <span class="rh-tier">TIER</span>
+          <span class="rh-date">ISSUED</span>
+        </div>
+
+        <!-- Rows injected by JS -->
+        <div id="reg-body">
+          <div class="reg-state">// AWAITING AUTHENTICATION</div>
+        </div>
+
       </div>
-    </div>
+
+    </div><!-- /.dash-wrap -->
 
     <footer>
       <p>© 2026 Internal Security Control &nbsp;//&nbsp; The Legend of Legiona</p>
-      <div class="session-pill">SESSION: ACTIVE</div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <span style="font-size:9px;letter-spacing:0.14em;color:var(--text-dim);text-transform:uppercase;" id="session-email"></span>
+        <div class="session-pill">SESSION: ACTIVE</div>
+      </div>
     </footer>
 
-  </div>
+  </div><!-- /#main-content -->
 
   <script src="/isc/assets/js/intel.js"></script>
 

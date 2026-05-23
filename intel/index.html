@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ISC Internal Portal</title>
   <link rel="icon" type="image/png" href="/isc/assets/images/ISC_LOGO.png">
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/isc/intel/assets/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Teko:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/isc/assets/css/style.css">
 </head>
 <script type="module" src="/gov/assets/js/stats.js"></script>
 <body oncontextmenu="return false;">
@@ -14,12 +14,18 @@
   <!-- ── LOGIN OVERLAY ── -->
   <div id="login-overlay">
     <div class="login-inner">
-      <div class="login-logo">
+
+      <div class="login-brand">
         <img src="/isc/assets/images/ISC_LOGO.png" alt="ISC">
-        <span>INTERNAL SECURITY CONTROL</span>
+        <div>
+          <span class="brand-label">ISC</span>
+          <span class="brand-sub">Internal Security Control</span>
+        </div>
       </div>
-      <div class="login-title">Authorization Required</div>
-      <div class="login-sub">ISC INTERNAL PORTAL // RESTRICTED ACCESS</div>
+
+      <div class="login-heading">Authorize<br>Access.</div>
+      <div class="login-sub">ISC INTERNAL PORTAL // RESTRICTED</div>
+
       <input
         type="password"
         class="inp"
@@ -30,46 +36,52 @@
       >
       <button class="auth-btn" id="auth-btn" onclick="auth()">AUTHENTICATE →</button>
       <div id="error-msg"></div>
+
       <p class="login-note">
         UNAUTHORIZED ACCESS VIOLATES ISC DIRECTIVE 01<br>
         ALL SESSIONS ARE LOGGED AND MONITORED
       </p>
+
     </div>
   </div>
 
-  <!-- ── MAIN CONTENT ── -->
+  <!-- ── MAIN CONTENT (revealed after auth) ── -->
   <div id="main-content">
 
-    <nav class="portal-nav">
-      <div class="pnav-brand">
+    <nav class="site-nav">
+      <a href="/isc/" class="brand">
         <img src="/isc/assets/images/ISC_LOGO.png" alt="ISC">
-        <span>ISC // INTERNAL PORTAL</span>
-      </div>
-      <div class="pnav-links">
+        <div>
+          <span class="brand-label">ISC</span>
+          <span class="brand-sub">Internal Portal</span>
+        </div>
+      </a>
+      <div class="nav-links">
         <a href="#status">SYSTEM</a>
         <a href="#personnel">PERSONNEL</a>
         <a href="#logs">LOGS</a>
         <a href="#threats">THREATS</a>
       </div>
-      <a href="/isc/" class="exit-link">EXIT →</a>
+      <a href="/isc/" class="nav-btn danger">EXIT →</a>
     </nav>
 
     <div class="dash-wrap">
 
       <div class="dash-hero reveal">
         <div>
-          <div class="dash-label">CLEARANCE_GRANTED // PORTAL_ACTIVE</div>
-          <h2 class="dash-title">Sovereignty Through <em>Oversight.</em></h2>
-          <p class="dash-sub">Official intelligence branch — The Legend of Legiona.</p>
+          <div class="eyebrow" style="margin-bottom:12px;">CLEARANCE_GRANTED // PORTAL_ACTIVE</div>
+          <div class="dash-heading">Sovereignty<br>Through <em>Oversight.</em></div>
+          <p class="dash-sub">Official intelligence branch — The Legend of Legiona</p>
         </div>
         <div class="clock-wrap">
           <div class="clock-time" id="clock">--:--:--</div>
-          <div class="clock-lbl">UTC // LIVE</div>
+          <div class="clock-lbl">MYT // LIVE</div>
         </div>
       </div>
 
       <div class="dash-grid">
 
+        <!-- STATUS -->
         <div class="panel reveal" id="status">
           <div class="panel-hdr">
             <span>SYSTEM_CORE</span>
@@ -81,6 +93,7 @@
           <div class="st-row"><span>BORDER_MONITORING</span><span class="st-tag on">RUNNING</span></div>
         </div>
 
+        <!-- PERSONNEL -->
         <div class="panel reveal" id="personnel">
           <div class="panel-hdr">
             <span>ACTIVE_OPERATIVES</span>
@@ -102,6 +115,7 @@
           </div>
         </div>
 
+        <!-- LOGS -->
         <div class="panel reveal" id="logs">
           <div class="panel-hdr">
             <span>CLASSIFIED_LOGS</span>
@@ -121,6 +135,7 @@
           </div>
         </div>
 
+        <!-- THREATS -->
         <div class="panel reveal" id="threats">
           <div class="panel-hdr">
             <span>THREAT_MONITOR</span>
@@ -146,14 +161,14 @@
       </div>
     </div>
 
-    <footer class="portal-footer">
-      <p>© 2026 INTERNAL SECURITY CONTROL // THE LEGEND OF LEGIONA</p>
+    <footer>
+      <p>© 2026 Internal Security Control &nbsp;//&nbsp; The Legend of Legiona</p>
       <div class="session-pill">SESSION: ACTIVE</div>
     </footer>
 
   </div>
 
-  <script src="/isc/intel/assets/js/script.js"></script>
-  
+  <script src="/isc/assets/js/intel.js"></script>
+
 </body>
 </html>

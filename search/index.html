@@ -5,53 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Public Archive Search | ISC</title>
   <link rel="icon" type="image/png" href="/isc/assets/images/ISC_LOGO.png">
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Teko:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600&family=Fira+Code:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/isc/assets/css/style.css">
 </head>
-<script type="module" src="/gov/assets/js/stats.js"></script>
 <body>
 
-  <nav class="site-nav">
-    <a href="/isc/" class="brand">
-      <img src="/isc/assets/images/ISC_LOGO.png" alt="ISC">
-      <div>
-        <span class="brand-label">ISC</span>
-        <span class="brand-sub">Public Archive</span>
+  <header>
+    <a href="/isc/" class="logo-area">
+      <img src="/isc/assets/images/ISC_LOGO.png" alt="ISC logo" height="26">
+      <div class="logo-labels">
+        <span class="top">ISC</span>
+        <span class="btm">PUBLIC ARCHIVE</span>
       </div>
     </a>
-    <a href="/isc/national/" class="nav-btn">← BACK TO INFO</a>
-  </nav>
+    <a href="/isc/national/" class="back-btn">← BACK TO INFO</a>
+  </header>
 
-  <!-- ── SEARCH HERO ── -->
+  <!-- SEARCH HERO -->
   <div class="search-hero">
-    <div class="page-inner">
-      <div class="eyebrow">DECLASSIFIED &nbsp;//&nbsp; PUBLIC ACCESS</div>
-      <div class="search-h1">Global Asset<br>Discovery.</div>
-      <p class="search-sub">Search missions, legal documents, and historical intelligence files.</p>
+    <div class="search-eyebrow">DECLASSIFIED // PUBLIC ACCESS</div>
+    <h1>Global Asset<br>Discovery.</h1>
+    <p class="search-sub">Search missions, legal documents, and historical intelligence files.</p>
 
-      <div class="search-bar">
-        <span class="search-icon">⌕</span>
-        <input
-          type="text"
-          id="archive-search"
-          placeholder="SEARCH MISSIONS, FILES, HISTORY..."
-          oninput="filterResults()"
-          autocomplete="off"
-          spellcheck="false"
-        >
-      </div>
+    <div class="search-bar" role="search">
+      <span class="search-icon" aria-hidden="true">⌕</span>
+      <label for="archive-search" class="visually-hidden">Search archive</label>
+      <input
+        type="text"
+        id="archive-search"
+        placeholder="SEARCH MISSIONS, FILES, HISTORY..."
+        autocomplete="off"
+        spellcheck="false"
+      >
+    </div>
 
-      <div class="search-hint">
-        <span class="hint-tag" onclick="setQuery('TLIO')">TLIO</span>
-        <span class="hint-tag" onclick="setQuery('Attack')">ATTACK</span>
-        <span class="hint-tag" onclick="setQuery('Operation')">OPERATION</span>
-        <span class="hint-tag" onclick="setQuery('Legal')">LEGAL</span>
-        <span class="hint-tag" onclick="setQuery('History')">HISTORY</span>
-      </div>
+    <div class="search-hint">
+      <span class="hint-tag" role="button" tabindex="0" data-query="TLIO">TLIO</span>
+      <span class="hint-tag" role="button" tabindex="0" data-query="Attack">ATTACK</span>
+      <span class="hint-tag" role="button" tabindex="0" data-query="Operation">OPERATION</span>
+      <span class="hint-tag" role="button" tabindex="0" data-query="Legal">LEGAL</span>
+      <span class="hint-tag" role="button" tabindex="0" data-query="History">HISTORY</span>
     </div>
   </div>
 
-  <!-- ── STATS ── -->
+  <!-- STATS STRIP -->
   <div class="stats-strip">
     <div class="stats-item">
       <span class="stats-val" id="total-count">—</span>
@@ -67,10 +64,10 @@
     </div>
   </div>
 
-  <!-- ── RESULTS ── -->
+  <!-- RESULTS SECTION -->
   <div class="results-wrap">
     <div class="results-header">
-      <p class="results-count" id="results-count">
+      <p class="results-count" id="results-count" aria-live="polite">
         ENTER A QUERY TO SEARCH <strong id="count-num">13</strong> DECLASSIFIED ASSETS
       </p>
     </div>
@@ -90,10 +87,9 @@
 
   <footer>
     <p>© 2026 Internal Security Control &nbsp;//&nbsp; Public Search Interface</p>
-    <div class="footer-badge">UNCLASSIFIED</div>
+    <div class="class-badge">UNCLASSIFIED</div>
   </footer>
 
   <script src="/isc/assets/js/search.js"></script>
-
 </body>
 </html>

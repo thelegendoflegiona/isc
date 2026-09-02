@@ -95,6 +95,19 @@ window.onAdminReady = function() {
 ═══════════════════════════════════════════════════════ */
 let _citizens = [];
 
+/* Avatar URL — same convention as the admin dashboard: Java accounts use
+   Minotar, Bedrock accounts use Crafthead with a `*` prefix on the
+   username, keyed off each citizen doc's `platform` field. Falls back to
+   Java/Minotar if platform is unset. */
+function avatarUrl(c) {
+  const name = c.username || '';
+  if (!name) return '';
+  if ((c.platform || 'java').toLowerCase() === 'bedrock') {
+    return `https://crafthead.net/avatar/*${encodeURIComponent(name)}/32`;
+  }
+  return `https://minotar.net/avatar/${encodeURIComponent(name)}/32`;
+}
+
 async function loadRegistry() {
   const body    = document.getElementById('reg-body');
   const countEl = document.getElementById('reg-count');
@@ -150,10 +163,14 @@ function filterRegistry() {
     const status    = (c.status || 'active').toLowerCase();
     const tagCls    = status === 'active' ? 'on' : (status === 'suspended' ? 'warn' : 'off');
     const clearance = clrLabel[c.tier || 'citizen']  || 'CL-?';
+    const avatar    = avatarUrl(c);
 
     return `<div class="reg-row">
       <span class="reg-id">${c.id}</span>
-      <span class="reg-name">${c.username || '—'}</span>
+      <span class="reg-name" style="display:flex;align-items:center;gap:8px;">
+        ${avatar ? `<img src="${avatar}" alt="" width="20" height="20" style="image-rendering:pixelated;border:1px solid var(--line-faint);flex-shrink:0;" onerror="this.style.display='none'">` : ''}
+        <span>${c.username || '—'}</span>
+      </span>
       <span class="reg-clr">${clearance}</span>
       <span class="st-tag ${tagCls}">${status.toUpperCase()}</span>
       <span class="reg-territory">${c.territory || 'Mainland Legiona'}</span>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — Page Not Found · ISC</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="/isc/assets/images/ISC_LOGO.png">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Teko:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/isc/assets/css/style.css">
+<style>
+  body{min-height:100vh;display:flex;flex-direction:column;background:var(--bg);color:var(--text);}
+  .nf-nav{display:flex;align-items:center;justify-content:space-between;padding:22px 5%;border-bottom:1px solid var(--line);}
+  .nf-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);}
+  .nf-brand img{height:24px;}
+  .nf-back{color:var(--gold);text-decoration:none;font-family:'Fira Code',monospace;font-size:0.8rem;letter-spacing:0.05em;}
+  .nf-main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4rem 5%;}
+  .nf-code{font-family:'Teko',sans-serif;font-size:clamp(4rem,12vw,7rem);font-weight:600;color:var(--gold);line-height:1;}
+  .nf-title{font-family:'Teko',sans-serif;font-size:1.6rem;font-weight:500;letter-spacing:0.02em;margin:0.5rem 0 0.75rem;}
+  .nf-desc{max-width:460px;color:var(--text-muted);line-height:1.6;margin-bottom:2rem;font-family:'Fira Code',monospace;font-size:0.85rem;}
+  .nf-btn{display:inline-block;padding:0.75rem 1.6rem;border:1px solid var(--gold);color:var(--gold);text-decoration:none;font-family:'Fira Code',monospace;font-size:0.8rem;letter-spacing:0.08em;transition:background 0.2s ease,color 0.2s ease;}
+  .nf-btn:hover{background:var(--gold);color:var(--bg);}
+</style>
+</head>
+<body>
+  <nav class="nf-nav">
+    <a href="/isc/" class="nf-brand">
+      <img src="/isc/assets/images/ISC_LOGO.png" alt="ISC Logo">
+      <span>ISC</span>
+    </a>
+    <a href="/isc/" class="nf-back">← RETURN TO ISC</a>
+  </nav>
+  <main class="nf-main">
+    <div class="nf-code">404</div>
+    <h1 class="nf-title">RECORD NOT FOUND</h1>
+    <p class="nf-desc">The page you requested does not exist, has been declassified, or was never on file.</p>
+    <a href="/isc/" class="nf-btn">← RETURN TO ISC</a>
+  </main>
+<script type="module" src="/gov/assets/js/stats.js"></script>
+</body>
+</html>

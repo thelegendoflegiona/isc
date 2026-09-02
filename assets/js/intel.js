@@ -95,19 +95,6 @@ window.onAdminReady = function() {
 ═══════════════════════════════════════════════════════ */
 let _citizens = [];
 
-/* Avatar URL — same convention as the admin dashboard: Java accounts use
-   Minotar, Bedrock accounts use Crafthead with a `*` prefix on the
-   username, keyed off each citizen doc's `platform` field. Falls back to
-   Java/Minotar if platform is unset. */
-function avatarUrl(c) {
-  const name = c.username || '';
-  if (!name) return '';
-  if ((c.platform || 'java').toLowerCase() === 'bedrock') {
-    return `https://crafthead.net/avatar/*${encodeURIComponent(name)}/32`;
-  }
-  return `https://minotar.net/avatar/${encodeURIComponent(name)}/32`;
-}
-
 async function loadRegistry() {
   const body    = document.getElementById('reg-body');
   const countEl = document.getElementById('reg-count');
@@ -122,7 +109,12 @@ async function loadRegistry() {
 
   try {
     const { collection, getDocs } = window._fire;
-    const snap = await getDocs(collection(window._db, 'citizens'));
+    // NOTE: switched from the legacy `citizens` collection to
+    // `citizens_private`, matching the admin dashboard's split-model
+    // rebuild. The old `citizens` collection is a stale backup that's no
+    // longer kept in sync on edits/renames — reading it here was why
+    // usernames were drifting out of sync with the dashboard.
+    const snap = await getDocs(collection(window._db, 'citizens_private'));
     _citizens = [];
     snap.forEach(d => _citizens.push({ id: d.id, ...d.data() }));
     _citizens.sort((a, b) => a.id.localeCompare(b.id));
@@ -163,12 +155,17 @@ function filterRegistry() {
     const status    = (c.status || 'active').toLowerCase();
     const tagCls    = status === 'active' ? 'on' : (status === 'suspended' ? 'warn' : 'off');
     const clearance = clrLabel[c.tier || 'citizen']  || 'CL-?';
-    const avatar    = avatarUrl(c);
+    // Uses the shared avatar.js helper (tabavatars.net) — same source as
+    // the admin dashboard, so avatars match exactly instead of guessing
+    // at a different skin service.
+    const avatarSrc = window.mcAvatarUrl
+      ? window.mcAvatarUrl(c.username, c.platform, 'helm')
+      : '';
 
     return `<div class="reg-row">
       <span class="reg-id">${c.id}</span>
       <span class="reg-name" style="display:flex;align-items:center;gap:8px;">
-        ${avatar ? `<img src="${avatar}" alt="" width="20" height="20" style="image-rendering:pixelated;border:1px solid var(--line-faint);flex-shrink:0;" onerror="this.style.display='none'">` : ''}
+        ${avatarSrc ? `<img src="${avatarSrc}" alt="" width="20" height="20" style="image-rendering:pixelated;border:1px solid var(--line-faint);flex-shrink:0;" onerror="this.style.display='none'">` : ''}
         <span>${c.username || '—'}</span>
       </span>
       <span class="reg-clr">${clearance}</span>

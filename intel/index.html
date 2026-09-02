@@ -172,18 +172,26 @@
      Local email/password login removed — authentication and role
      checking now go through the shared auth-guard.js (single login at
      /gov/login/, same-origin session shared with the rest of the site).
-     Firebase app/auth/db are still initialized and exposed on window
-     since intel.js depends on window._auth / window._db / window._fire
-     / window._signOut for the registry queries and the EXIT button. -->
+
+     IMPORTANT: auth-guard.js takes NO Firebase imports of its own — we
+     pass it our own auth/db instances plus onAuthStateChanged/doc/getDoc
+     from this exact SDK version. This avoids a real bug we hit: if
+     auth-guard.js imported its own copy of the SDK at a different version
+     URL, its getAuth() would look for a "default app" in a completely
+     separate module registry than the one this page's initializeApp()
+     populated, and throw "No Firebase App '[DEFAULT]' has been created"
+     even though the app WAS initialized — just under a different SDK
+     module instance. -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
   import {
     getFirestore,
-    collection, getDocs
+    collection, getDocs, doc, getDoc
   } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
   import {
     getAuth,
-    signOut
+    signOut,
+    onAuthStateChanged
   } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
   import { requireRole } from "https://cdn.jsdelivr.net/gh/thelegendoflegiona/gov@main/assets/js/auth-guard.js";
 
@@ -208,6 +216,7 @@
   });
 
   requireRole(["super-admin", "isc-officer"], {
+    auth, db, onAuthStateChanged, doc, getDoc,
     loginPath: "/gov/login/",
     // deniedPath: "/gov/systems/dashboard/", // uncomment to bounce wrong-role gov admins there instead of the inline denial screen
     onAuthorized: (admin) => {

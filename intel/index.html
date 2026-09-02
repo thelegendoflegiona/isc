@@ -135,12 +135,46 @@
     }
 
     .reg-panel-tag { color: var(--text-dim); font-size: 9px; letter-spacing: 0.15em; }
+
+    /* ── Redirect overlay (replaces old login form) ── */
+    #login-overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg, #0a0a0a);
+      z-index: 100;
+      transition: opacity 0.4s ease;
+    }
+    #login-overlay .redirect-inner {
+      text-align: center;
+      font-family: 'Fira Code', monospace;
+    }
+    #login-overlay .redirect-msg {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--text-dim, #888);
+      text-transform: uppercase;
+    }
+    #login-overlay .redirect-note {
+      margin-top: 10px;
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      color: var(--text-dim, #555);
+    }
   </style>
 </head>
 
 <script type="module" src="/gov/assets/js/stats.js"></script>
 
-<!-- ═══ FIREBASE MODULE ═══ -->
+<!-- ═══ FIREBASE + ACCESS CONTROL ═══
+     Local email/password login removed — authentication and role
+     checking now go through the shared auth-guard.js (single login at
+     /gov/login/, same-origin session shared with the rest of the site).
+     Firebase app/auth/db are still initialized and exposed on window
+     since intel.js depends on window._auth / window._db / window._fire
+     / window._signOut for the registry queries and the EXIT button. -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
   import {
@@ -149,10 +183,9 @@
   } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
   import {
     getAuth,
-    signInWithEmailAndPassword,
-    signOut,
-    onAuthStateChanged
+    signOut
   } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+  import { requireRole } from "https://cdn.jsdelivr.net/gh/thelegendoflegiona/gov@main/assets/js/auth-guard.js";
 
   const app = initializeApp({
     apiKey:            "AIzaSyAgrLJDO8F6yyVLFubiZdRGiEl5ICRSAdQ",
@@ -167,86 +200,52 @@
   const db   = getFirestore(app);
 
   /* Expose to window so intel.js (regular script) can use them */
-  window._auth   = auth;
-  window._db     = db;
-  window._fire   = { collection, getDocs };
-  window._signIn = (email, pass) => signInWithEmailAndPassword(auth, email, pass);
-  window._signOut = () => signOut(auth);
+  window._auth    = auth;
+  window._db      = db;
+  window._fire    = { collection, getDocs };
+  window._signOut = () => signOut(auth).then(() => {
+    window.location.href = "/gov/login/?redirect=" + encodeURIComponent(window.location.pathname);
+  });
 
-  onAuthStateChanged(auth, user => {
-    const overlay = document.getElementById('login-overlay');
-    const main    = document.getElementById('main-content');
+  requireRole(["super-admin", "isc-officer"], {
+    loginPath: "/gov/login/",
+    // deniedPath: "/gov/systems/dashboard/", // uncomment to bounce wrong-role gov admins there instead of the inline denial screen
+    onAuthorized: (admin) => {
+      const overlay = document.getElementById('login-overlay');
+      const main    = document.getElementById('main-content');
 
-    if (user) {
-      /* Fade out login overlay */
       overlay.style.opacity = '0';
       setTimeout(() => {
         overlay.style.display = 'none';
         main.style.display = 'flex';
-        /* Set session email in footer */
         const se = document.getElementById('session-email');
-        if (se) se.textContent = user.email;
-        /* Trigger intel.js boot */
+        if (se) se.textContent = admin.email || auth.currentUser?.email || '';
         if (typeof window.onAdminReady === 'function') {
           window.onAdminReady();
         }
       }, 400);
-    } else {
-      overlay.style.opacity = '1';
-      overlay.style.display = 'flex';
-      main.style.display    = 'none';
-    }
+    },
   });
 </script>
 
 <body oncontextmenu="return false;">
 
   <!-- ═══════════════════════════════════
-       LOGIN OVERLAY
+       REDIRECT OVERLAY (shown briefly while auth-guard checks/redirects;
+       unauthenticated visitors never see main-content — they're sent to
+       /gov/login/ before this ever fades out)
   ═══════════════════════════════════ -->
   <div id="login-overlay">
-    <div class="login-inner">
-
-      <div class="login-brand">
-        <img src="/isc/assets/images/ISC_LOGO.png" alt="ISC">
-        <div>
-          <span class="brand-label">ISC</span>
-          <span class="brand-sub">Internal Security Control</span>
-        </div>
-      </div>
-
-      <div class="login-heading">Secure<br>Access.</div>
-      <div class="login-sub">ISC INTERNAL PORTAL // RESTRICTED ACCESS</div>
-
-      <input
-        type="email"
-        class="inp"
-        id="login-email"
-        placeholder="ADMIN EMAIL ADDRESS"
-        autocomplete="username"
-      >
-      <input
-        type="password"
-        class="inp"
-        id="passcode"
-        placeholder="ACCESS PASSWORD"
-        autocomplete="current-password"
-      >
-      <button class="auth-btn" id="auth-btn" onclick="auth()">AUTHENTICATE →</button>
-      <div id="error-msg"></div>
-
-      <p class="login-note">
-        UNAUTHORIZED ACCESS VIOLATES ISC DIRECTIVE 01<br>
-        ALL SESSIONS ARE LOGGED AND MONITORED
-      </p>
-
+    <div class="redirect-inner">
+      <div class="redirect-msg">// VERIFYING CLEARANCE</div>
+      <div class="redirect-note">REDIRECTING TO SECURE LOGIN IF REQUIRED</div>
     </div>
   </div>
 
   <!-- ═══════════════════════════════════
        MAIN CONTENT (revealed after auth)
   ═══════════════════════════════════ -->
-  <div id="main-content">
+  <div id="main-content" style="display:none;">
 
     <nav class="site-nav">
       <a href="/isc/" class="brand">
@@ -263,7 +262,7 @@
         <a href="#threats">THREATS</a>
         <a href="#registry">REGISTRY</a>
       </div>
-      <a href="#" class="nav-btn danger" onclick="logout(); return false;">EXIT →</a>
+      <a href="#" class="nav-btn danger" onclick="window._signOut(); return false;">EXIT →</a>
     </nav>
 
     <div class="dash-wrap">
